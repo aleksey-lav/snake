@@ -104,6 +104,7 @@ public class Board extends AbstractBoard<Elements> {
     }
 
     public boolean isGameOver() {
+
         return getHead() == null;
     }
 
@@ -124,10 +125,12 @@ public class Board extends AbstractBoard<Elements> {
     }
 
     public List<Point> getStones() {
+
         return get(Elements.BAD_APPLE);
     }
 
     public List<Point> getWalls() {
+
         return get(Elements.BREAK);
     }
 }
