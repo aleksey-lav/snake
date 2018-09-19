@@ -58,24 +58,18 @@ public class YourSolver implements Solver<Board> {
         String curDir = board.getSnakeDirection().toString();
         String path = Direction.RIGHT.toString();
 
-        if ((headerX == appleX && headerY < appleY) && curDir != "DOWN"){
+        if (headerY < appleY){
             path = Direction.UP.toString();
         }
-
-
-        else if(headerX == appleX && headerY > appleY){
+        else if (headerY > appleY){
             path = Direction.DOWN.toString();
-        }else if (headerX < appleX){
-            path = Direction.RIGHT.toString();
-        }else if ( headerX > appleX ){
-            if (curDir == "LEFT"){
-                path = Direction.UP.toString();
-            }
+        }
+        else if ( headerX < appleX){
+                path = Direction.RIGHT.toString();
+        }
+        else if ( headerX > appleX){
             path = Direction.LEFT.toString();
         }
-
-
-
         return path;
     }
 
