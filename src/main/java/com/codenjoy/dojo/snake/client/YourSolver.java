@@ -27,6 +27,7 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.Direction;
+import com.codenjoy.dojo.services.Point;
 import com.codenjoy.dojo.services.RandomDice;
 import org.apache.commons.lang.ObjectUtils;
 
@@ -49,27 +50,43 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         System.out.println(board.toString());
 
-
-
         int appleY = board.getApples().get(0).getY();
         int appleX = board.getApples().get(0).getX();
         int headerX = board.getHead().getX();
         int headerY = board.getHead().getY();
+
         String curDir = board.getSnakeDirection().toString();
         String path = Direction.RIGHT.toString();
 
+        int divX = 0; //next step by X
+        int divY = 0; //next step by Y
+
+        int nextX;
+        int nextY;
+
         if (headerY < appleY){
             path = Direction.UP.toString();
+            divY = -1;
         }
         else if (headerY > appleY){
             path = Direction.DOWN.toString();
+            divY = 1;
         }
         else if ( headerX < appleX){
-                path = Direction.RIGHT.toString();
+            path = Direction.RIGHT.toString();
+            divX = 1;
         }
         else if ( headerX > appleX){
             path = Direction.LEFT.toString();
+            divX = -1;
         }
+        nextX = board.getHead().getX() + divX;
+        nextY = board.getHead().getY() + divY;
+
+        for (Point i: board.getSnake()) {
+            if( i  )
+        }
+
         return path;
     }
 
@@ -79,6 +96,22 @@ public class YourSolver implements Solver<Board> {
 
 
 
+
+//    public static String putDirectionToNextPoint(Point fromPoint, Point toPoint) {
+//        if (fromPoint.getY() < toPoint.getY()) {
+//            return Direction.UP.toString();
+//        }
+//        if (fromPoint.getY() > toPoint.getY()) {
+//            return Direction.DOWN.toString();
+//        }
+//        if (fromPoint.getX() < toPoint.getX()) {
+//            return Direction.RIGHT.toString();
+//        }
+//        return Direction.LEFT.toString();
+//    }
+//    public static Point pointPlusXY(Point point, int divX, int divY) {
+//        return new PointImpl(point.getX() + divX, point.getY() + divY);
+//    }
 
 
 
