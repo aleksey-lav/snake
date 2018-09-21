@@ -29,9 +29,8 @@ import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.Point;
 import com.codenjoy.dojo.services.RandomDice;
-import org.apache.commons.lang.ObjectUtils;
 
-import java.security.DigestException;
+import java.util.List;
 
 /**
  * User: your name
@@ -64,66 +63,85 @@ public class YourSolver implements Solver<Board> {
         int nextX;
         int nextY;
 
-        if (headerY < appleY){
-            path = Direction.UP.toString();
-            divY = -1;
-        }
-        else if (headerY > appleY){
-            path = Direction.DOWN.toString();
-            divY = 1;
-        }
-        else if ( headerX < appleX){
-            path = Direction.RIGHT.toString();
+        if (headerX < appleX) {
             divX = 1;
         }
-        else if ( headerX > appleX){
-            path = Direction.LEFT.toString();
+        if (headerX > appleX) {
             divX = -1;
         }
-        nextX = board.getHead().getX() + divX;
-        nextY = board.getHead().getY() + divY;
-
-        for (Point i: board.getSnake()) {
-            if( i  )
+        if (headerY < appleY) {
+            divY = 1;
+        }
+        if (headerY > appleY) {
+            divY = -1;
         }
 
-        return path;
+        /*nextX = board.getHead().getX() + divX;
+        nextY = board.getHead().getY() + divY;*/
+
+        //step right
+        if (divX > 0) {
+            if (ifPresentBarrier(board, board.getHead(), divX, 0)) {
+                return Direction.RIGHT.toString();
+            }
+        }
+        if (divY < 0) {
+            if (ifPresentBarrier(board, board.getHead(), 0, divY)) {
+                return Direction.DOWN.toString();
+            }
+        }
+        if (divX < 0) {
+            if (ifPresentBarrier(board, board.getHead(), divX, 0)) {
+                return Direction.LEFT.toString();
+            }
+        }
+        if (divY > 0) {
+            if (ifPresentBarrier(board, board.getHead(), 0, divY)) {
+                return Direction.UP.toString();
+            }
+        }
+        //двигаемся в первую попавшейся пустую ячейку
+        if (ifPresentBarrier(board, board.getHead(), 1, 0)) {
+            return Direction.RIGHT.toString();
+        }
+        if (ifPresentBarrier(board, board.getHead(), 0, -1)) {
+            return Direction.DOWN.toString();
+        }
+        if (ifPresentBarrier(board, board.getHead(), -1, 0)) {
+            return Direction.LEFT.toString();
+        }
+        if (ifPresentBarrier(board, board.getHead(), 0, 1)) {
+            return Direction.UP.toString();
+        }
+
+        return Direction.LEFT.toString();
     }
-
-
-
-
-
-
-
-
-//    public static String putDirectionToNextPoint(Point fromPoint, Point toPoint) {
-//        if (fromPoint.getY() < toPoint.getY()) {
-//            return Direction.UP.toString();
-//        }
-//        if (fromPoint.getY() > toPoint.getY()) {
-//            return Direction.DOWN.toString();
-//        }
-//        if (fromPoint.getX() < toPoint.getX()) {
-//            return Direction.RIGHT.toString();
-//        }
-//        return Direction.LEFT.toString();
-//    }
-//    public static Point pointPlusXY(Point point, int divX, int divY) {
-//        return new PointImpl(point.getX() + divX, point.getY() + divY);
-//    }
-
-
-
-
-
+        //проверяем или находиться что-то в ящейке
+        public static boolean ifPresentBarrier(Board board, Point point, int divX, int divY) {
+            if (ifPresentStone(board, board.getStones(), point, divX, divY)) {
+                if (ifPresentStone(board, board.getWalls(), point, divX, divY)) {
+                    if (ifPresentStone(board, board.getSnake(), point, divX, divY)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        //проверка на камень в клетке, в которую займет при следующем ходе голова
+         public static boolean ifPresentStone(Board board, List<Point> stones, Point head, int divX, int divY) {
+         for (Point stone : stones) {
+            if (head.getX() + divX == stone.getX() && head.getY() + divY == stone.getY()) {
+                return false;
+            }
+         }
+        return true;
+    }
     public static void main(String[] args) {
         WebSocketRunner.runClient(
                 // paste here board page url from browser after registration
-                "http://104.248.24.36/codenjoy-contest/board/player/ol.leichenko@gmail.com?code=2142052770436339034",
+                "http://104.248.24.36/codenjoy-contest/board/player/ol.leichenko_@gmail.com?code=406993911952119867",
                 new YourSolver(new RandomDice()),
                 new Board());
-
     }
 
 }
